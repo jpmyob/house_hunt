@@ -20,7 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if(!snapshot.hasData) {
             return Center(
               child: SpinKitDoubleBounce(
-                color: Colors.deepOrange[300],
+                color: Colors.teal,
                 size: 100.0,
               ),
             );
