@@ -17,7 +17,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       body: FutureBuilder(
         future: location.getCurrentLocation(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) {
+          if(!snapshot.hasData && !snapshot.hasError) {
             return Center(
               child: SpinKitDoubleBounce(
                 color: Colors.teal,
@@ -25,7 +25,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               ),
             );
           }
-          if(snapshot.data == 'failed') {
+          if(snapshot.data == 'failed' || snapshot.hasError) {
             return Container(
               color: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 50.0),

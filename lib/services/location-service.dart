@@ -9,7 +9,7 @@ class Location {
       if (!serviceEnabled) {
         return Future.error('Location services are disabled.');
       }
-
+      
       permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -22,9 +22,10 @@ class Location {
         return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
       } 
-      Position position = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 5));
+      Position position = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10));
       return {'lat': position.latitude, 'long': position.longitude};
     } catch(e) {
+      print(e);
       return 'failed';
     }
   }

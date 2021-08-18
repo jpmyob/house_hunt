@@ -14,4 +14,23 @@ class RealStateService {
       print('caught format exception!');
     }
   }
+
+  double searchAreaOffset(double radius) {
+    List<double> ara = [600, 60, 0.6];
+    String res = "0.00";
+    double offset = 0;
+    for(int i = 0; i < 3; i++) {
+      if(radius == 0) break;
+      if(radius >= ara[i]) {
+        int division = radius~/ara[i];
+        radius = radius % ara[i];
+        if(division > 9) division = 9;
+        res = res+"$division";
+      } else {
+        res = res+"0";
+      }
+    }
+    offset = double.parse(res);
+    return offset;
+  }
 }

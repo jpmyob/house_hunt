@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:real_state_finder/screens/Edit-search-radius-screen.dart';
 import 'package:real_state_finder/screens/loading-screen.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
+import 'package:real_state_finder/utils/constants.dart';
 
 class RealStateScreen extends StatefulWidget {
   final gpsPosition;
@@ -13,11 +16,21 @@ class RealStateScreen extends StatefulWidget {
 }
 
 class _RealStateScreenState extends State<RealStateScreen> {
+  final FlutterTts tts = FlutterTts();
   final realStateService = RealStateService();
   StreamSubscription<Position> positionStream;
 
   @override
-  void dispose() { 
+  void initState() {
+    tts.setLanguage("en");
+    tts.setSpeechRate(.7);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tts.stop();
+    tts?.cancelHandler();
     positionStream?.cancel();
     super.dispose();
   }
@@ -28,13 +41,26 @@ class _RealStateScreenState extends State<RealStateScreen> {
       var distance = Geolocator.distanceBetween(widget.gpsPosition['lat'], widget.gpsPosition['long'], position.latitude, position.longitude);
       if(distance > 250.0) {
         reFetchData(context);
-      }
+      } 
     });
-    return realStateService.getRealStateList(latitude: widget.gpsPosition['lat'], longitude: widget.gpsPosition['long']);
+    return await realStateService.getRealStateList(latitude: widget.gpsPosition['lat'], longitude: widget.gpsPosition['long']);
+  }
+
+  readAloud(List data) async {
+    if(data.length > 1) {
+      String text = '${data.length} real state property found!';
+      for(var item in data) {
+        text = text+ '${item['statusText']}!.'+item['address']+'.'+item['beds'].toString()+' Beds,'+
+        item['baths'].toInt().toString()+' Baths,'+'Area: '+item['area'].toString()+' square feets.\n'+
+        'Price'+ item['price']+'.\n';
+      }
+      await tts.speak(text);
+    }
   }
 
   reFetchData(context) {
-    positionStream.cancel();
+    tts.stop();
+    positionStream?.cancel();
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
   }
 
@@ -64,6 +90,7 @@ class _RealStateScreenState extends State<RealStateScreen> {
           future: getLiveRealStateList(context),
           initialData: [],
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(snapshot.hasData) readAloud(snapshot.data);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,13 +105,41 @@ class _RealStateScreenState extends State<RealStateScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, left: 15.0),
-                  child: Text(
-                    'Current Position: ${widget.gpsPosition['lat']}, ${widget.gpsPosition['long']}', 
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  padding: EdgeInsets.only(left: 15.0, bottom: 15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                        child: Text(
+                          'Search Area Radius: $searchRadius feets', 
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: Colors.teal,
+                          primary: Colors.white,
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(60, 25),
+                        ),
+                        onPressed: () {
+                          tts.stop();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditSearchRadiusScreen()))
+                          .then((value) {
+                            if(value == 'saved') {
+                              offset = realStateService.searchAreaOffset(searchRadius);
+                              reFetchData(context);
+                            }
+                          });
+                        }, 
+                        child: Text('Change', style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),),
+                      ),
+                    ],
                   ),
                 ),
                 for(var item in snapshot.data) Padding(
