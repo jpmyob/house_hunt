@@ -4,6 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/screens/Edit-search-radius-screen.dart';
 import 'package:real_state_finder/screens/loading-screen.dart';
+import 'package:real_state_finder/services/location-service.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
@@ -19,11 +20,12 @@ class _RealStateScreenState extends State<RealStateScreen> {
   final FlutterTts tts = FlutterTts();
   final realStateService = RealStateService();
   StreamSubscription<Position> positionStream;
+  Location location = Location();
 
   @override
   void initState() {
     tts.setLanguage("en");
-    tts.setSpeechRate(.7);
+    tts.setSpeechRate(0.4);
     super.initState();
   }
 
@@ -36,13 +38,13 @@ class _RealStateScreenState extends State<RealStateScreen> {
   }
 
   Future getLiveRealStateList(context) async {
-    positionStream =  Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high, 
-      forceAndroidLocationManager: true).listen((Position position) {
-      var distance = Geolocator.distanceBetween(widget.gpsPosition['lat'], widget.gpsPosition['long'], position.latitude, position.longitude);
-      if(distance > 250.0) {
-        reFetchData(context);
-      } 
-    });
+    // positionStream =  Geolocator.getPositionStream(desiredAccuracy: LocationAccuracy.high, 
+    //   forceAndroidLocationManager: true).listen((Position position) {
+    //   var distance = Geolocator.distanceBetween(widget.gpsPosition['lat'], widget.gpsPosition['long'], position.latitude, position.longitude);
+    //   if(distance > 250.0) {
+    //     reFetchData(context);
+    //   } 
+    // });
     return await realStateService.getRealStateList(latitude: widget.gpsPosition['lat'], longitude: widget.gpsPosition['long']);
   }
 
@@ -58,12 +60,17 @@ class _RealStateScreenState extends State<RealStateScreen> {
     }
   }
 
-  reFetchData(context) {
+  reFetchData(context) async {
     tts.stop();
     positionStream?.cancel();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
+    var res = await location.getCurrentLocation().catchError((e) => reStartApp()); 
+    if(res == 'failed') reStartApp();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RealStateScreen(gpsPosition: res)));
   }
 
+  reStartApp() {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +95,6 @@ class _RealStateScreenState extends State<RealStateScreen> {
       body: SingleChildScrollView(
         child: FutureBuilder(
           future: getLiveRealStateList(context),
-          initialData: [],
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if(snapshot.hasData) readAloud(snapshot.data);
             return Column(
@@ -97,7 +103,7 @@ class _RealStateScreenState extends State<RealStateScreen> {
                 Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Text(
-                    'Nearby Real State found ${snapshot.data.length}', 
+                    'Nearby Real State found ${snapshot.data?.length ?? 0}', 
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
