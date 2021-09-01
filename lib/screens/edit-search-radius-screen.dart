@@ -27,7 +27,7 @@ class _EditSearchRadiusScreenState extends State<EditSearchRadiusScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('$sliderValue feet', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+          Text('$sliderValue metres', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
           Slider(
             value: sliderValue, 
             min: 300,
@@ -46,7 +46,7 @@ class _EditSearchRadiusScreenState extends State<EditSearchRadiusScreen> {
               ),
               onPressed: () {
                 searchRadius = sliderValue;
-                Navigator.pop(context, 'saved');
+                Navigator.pop(context);
               }, 
               child: Text('Apply', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
             ),

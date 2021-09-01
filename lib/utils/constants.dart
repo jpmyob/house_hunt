@@ -1,4 +1,4 @@
-double offset = 0.0025;
+double offset = 0.1;
 double searchRadius = 1500;
 exploreLatLong(latitude, longitude) {
   double latMax = latitude + offset;

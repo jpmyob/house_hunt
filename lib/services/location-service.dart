@@ -23,7 +23,7 @@ class Location {
           'Location permissions are permanently denied, we cannot request permissions.');
       } 
       Position position = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10));
-      return {'lat': position.latitude, 'long': position.longitude};
+      return position;
     } catch(e) {
       print(e);
       return 'failed';
