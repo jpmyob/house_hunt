@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
+// ignore: must_be_immutable
 class PropertyList extends StatelessWidget {
   final Position position;
   final List propertyList;
-  PropertyList({@required this.position, @required this.propertyList});
+  PropertyList({@required this.position, @required this.propertyList}); 
 
   getListWithInRadius() {
     List list = [];
@@ -18,6 +19,7 @@ class PropertyList extends StatelessWidget {
         list.add(pt);
       }
     }
+    readAloud(list);
     return list;
   }
 

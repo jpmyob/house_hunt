@@ -20,7 +20,7 @@ class HomeHuntScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.teal[400],
         title: Text(
-          'Nearby Real States', 
+          'Nearby House Properties', 
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w700,
@@ -29,8 +29,7 @@ class HomeHuntScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.near_me, color: Colors.white,), 
-            onPressed: () {
-            }
+            onPressed: () => reStartApp(context),
           ),
         ],
       ),

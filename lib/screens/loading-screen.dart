@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:real_state_finder/screens/home-hunt-screen.dart';
-import 'package:real_state_finder/screens/real-state-screen.dart';
 import 'package:real_state_finder/services/location-service.dart';
+import 'package:real_state_finder/utils/constants.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -59,7 +59,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
               ),
             );
           }
-          // return RealStateScreen(gpsPosition: snapshot.data,);
+          
+          if(snapshot.hasData && snapshot.data != 'failed' && !snapshot.hasError) {
+            initFlutterTTS();
+            initialPos = snapshot.data;
+          }  
           return HomeHuntScreen(position: snapshot.data);
         }
       ),
