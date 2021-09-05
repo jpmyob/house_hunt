@@ -23,6 +23,10 @@ class Location {
           'Location permissions are permanently denied, we cannot request permissions.');
       } 
       Position position = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10));
+      // var coordinates = new Coordinates(position.latitude, position.longitude);
+      // var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      // var first = addresses.first.locality;
+      // print("$first");
       return position;
     } catch(e) {
       print(e);

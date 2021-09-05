@@ -39,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                     color: Colors.black87),
                   ),
                   SizedBox(height: 20.0,),
-                  Text('Either your GPS is turned off or location permission request is denied. Turn on GPS, grant location permission and Restart the app', 
+                  Text('Either your GPS/Wifi is turned off or location permission request is denied. Turn on GPS, grant location permission and Restart the app', 
                   style: TextStyle(
                     fontSize: 15.0,
                     height: 1.5,

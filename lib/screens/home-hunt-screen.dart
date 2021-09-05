@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:real_state_finder/screens/loading-screen.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
+import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/widgets/home-hunt/drawer.dart';
 import 'package:real_state_finder/widgets/home-hunt/live-position-stream.dart';
 
 class HomeHuntScreen extends StatelessWidget {
@@ -9,16 +10,13 @@ class HomeHuntScreen extends StatelessWidget {
   HomeHuntScreen({@required this.position});
 
   final realStateService = RealStateService();
-
-  reStartApp(context) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
-  }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal[400],
+        titleSpacing: 0,
         title: Text(
           'Nearby House Properties', 
           style: TextStyle(
@@ -33,6 +31,7 @@ class HomeHuntScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: AppDrawer(),
       body: SingleChildScrollView(
         child: FutureBuilder(
           future: realStateService.getRealStateList(position: position),
