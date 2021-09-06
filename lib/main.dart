@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:real_state_finder/screens/loading-screen.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:real_state_finder/screens/loading-screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

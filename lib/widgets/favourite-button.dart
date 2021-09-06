@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
 class FavouriteButton extends StatefulWidget {
@@ -16,10 +18,16 @@ class _FavouriteButtonState extends State<FavouriteButton> {
     return IconButton(
       icon: Icon(icon, color: Colors.white,), 
       onPressed: () {
+        if(icon == Icons.favorite_outline) {
+          fvBox = Hive.box('HH_favoriteList');
+          List fvList = fvBox.get('fv_list', defaultValue: []);
+          var check = fvList.any((el) => el['address'] == widget.property['address']);
+          if(!check) {
+            fvList.add(widget.property);
+            fvBox.put('fv_list', fvList);
+          }
+        }
         setState(() => icon = Icons.favorite);
-        // List fvList = fvBox.get('fv_list', defaultValue: []);
-        // print(fvList);
-        // fvList.add(widget.property);
       },
     );
   }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:real_state_finder/screens/loading-screen.dart';
 const ZILLOW_IP = 'https://www.zillow.com/search/GetSearchPageState.htm';
 
+var fvBox;
+var recentBox;
 List allPropertyList = [];
 
 reStartApp(context) {
@@ -15,7 +19,7 @@ reStartApp(context) {
 
 Position initialPos;
 Position currentPos;
-double coveredDistance = searchRadius;
+double coveredDistance = 0;
 
 double offset = 0.02;
 double searchRadius = 1500;
@@ -39,7 +43,7 @@ initFlutterTTS() async {
 
 readAloud(List data) async {
   if(data.length > 0 && read && 
-  Geolocator.distanceBetween(initialPos.latitude, initialPos.longitude, currentPos.latitude, currentPos.longitude) > coveredDistance) {
+  Geolocator.distanceBetween(initialPos.latitude, initialPos.longitude, currentPos.latitude, currentPos.longitude) >= coveredDistance) {
     read = false;
     coveredDistance = coveredDistance + searchRadius;
     String text = '${data.length} real state property found!';
@@ -51,4 +55,11 @@ readAloud(List data) async {
     await tts.speak(text);
     tts.setCompletionHandler(() => read = true);
   }
+}
+
+initDatabase() async {
+  final appDocDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocDir.path);
+  fvBox = Hive.openBox('HH_favoriteList');
+  recentBox = Hive.openBox('HH_recentBox');
 }

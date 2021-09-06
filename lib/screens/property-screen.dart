@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:real_state_finder/screens/favourite-list-screen.dart';
+import 'package:real_state_finder/utils/constants.dart';
 import 'package:real_state_finder/widgets/favourite-button.dart';
 
 class PropertyScreen extends StatelessWidget {
   final property;
-  PropertyScreen({@required this.property});
-
+  final bool showFav;
+  final bool showDelete;
+  PropertyScreen({@required this.property, this.showFav, this.showDelete});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal[400],
         actions: [
-          FavouriteButton(property: property),
+          Visibility(
+            visible: showFav ?? true,
+            child: FavouriteButton(property: property),
+          ),
+          Visibility(
+            visible: showDelete ?? false,
+            child: IconButton(
+              icon: Icon(Icons.delete), 
+              onPressed: () {
+                fvBox = Hive.box('HH_favoriteList');
+                List fvList = fvBox.get('fv_list', defaultValue: []);
+                List list = fvList.where((el) => el['address'] != property['address']).toList();
+                fvBox.put('fv_list', list);
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteListScreen(favoriteList: list)));
+              }
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(

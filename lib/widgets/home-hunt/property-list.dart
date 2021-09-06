@@ -40,7 +40,10 @@ class PropertyList extends StatelessWidget {
           ),
         ),
         for(var item in getListWithInRadius()) GestureDetector(
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(property: item))),
+          onTap: () {
+            tts.stop();
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(property: item)));
+          },
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
             padding: EdgeInsets.all(8.0),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:real_state_finder/screens/all-property-list-screen.dart';
+import 'package:real_state_finder/screens/favourite-list-screen.dart';
+import 'package:real_state_finder/utils/constants.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -24,9 +27,9 @@ class AppDrawer extends StatelessWidget {
               Icons.list_alt
             ),
             title: Text('All Property Around 2 miles'),
-            onTap: () async {
+            onTap: () {
               Navigator.pop(context);
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => AllPropertyListScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AllPropertyListScreen()));
             },
           ),
           ListTile(
@@ -36,6 +39,9 @@ class AppDrawer extends StatelessWidget {
             title: Text('Favorite List'),
             onTap: () {
               Navigator.pop(context);
+              fvBox = Hive.box('HH_favoriteList');
+              List fvList = fvBox.get('fv_list', defaultValue: []);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteListScreen(favoriteList: fvList,)));
             },
           ),
           ListTile(
