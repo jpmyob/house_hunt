@@ -1,7 +1,8 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/services/hive-database-service.dart';
 
 class Location {
+  final hiveService = HiveDatabaseService();
 
   Future getCurrentLocation() async {
     try {
@@ -25,7 +26,7 @@ class Location {
       } 
       Position position = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10));
       
-      initDatabase();
+      hiveService.initDatabase();
       // var coordinates = new Coordinates(position.latitude, position.longitude);
       // var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
       // var first = addresses.first.locality;

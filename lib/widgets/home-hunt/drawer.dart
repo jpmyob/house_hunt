@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:real_state_finder/screens/all-property-list-screen.dart';
 import 'package:real_state_finder/screens/favourite-list-screen.dart';
+import 'package:real_state_finder/screens/recent-property-list-screen.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -51,6 +52,9 @@ class AppDrawer extends StatelessWidget {
             title: Text('Recent Property'),
             onTap: () {
               Navigator.pop(context);
+              recentBox = Hive.box('HH_recentBox');
+              List recentList = recentBox.get('recent_list', defaultValue: []);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RecentListScreen(recentList: recentList)));
             },
           ),
         ],

@@ -11,7 +11,7 @@ class LivePositionStream extends StatelessWidget {
 
   reloadPropertyData(context, Position pos) {
     double distance =  Geolocator.distanceBetween(initialPos.latitude, initialPos.longitude, pos.latitude, pos.longitude);
-    if(distance > 2500) reStartApp(context);
+    if(distance > 2300) reStartApp(context);
   }
 
   @override

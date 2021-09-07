@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:real_state_finder/screens/home-hunt-screen.dart';
 import 'package:real_state_finder/services/location-service.dart';
+import 'package:real_state_finder/services/read-text-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   Location location  = Location();
-
+  final readService = ReadService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +62,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           }
           
           if(snapshot.hasData && snapshot.data != 'failed' && !snapshot.hasError) {
-            initFlutterTTS();
+            readService.initFlutterTTS();
             initialPos = snapshot.data;
           }  
           return HomeHuntScreen(position: snapshot.data);

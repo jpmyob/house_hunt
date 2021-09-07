@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/screens/property-screen.dart';
+import 'package:real_state_finder/services/hive-database-service.dart';
+import 'package:real_state_finder/services/read-text-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/widgets/property-card.dart';
 
 // ignore: must_be_immutable
 class PropertyList extends StatelessWidget {
@@ -9,6 +12,8 @@ class PropertyList extends StatelessWidget {
   final List propertyList;
   PropertyList({@required this.position, @required this.propertyList}); 
 
+  final hiveService = HiveDatabaseService();
+  final readService = ReadService();
   getListWithInRadius() {
     List list = [];
     for(var pt in propertyList) {
@@ -20,7 +25,9 @@ class PropertyList extends StatelessWidget {
         list.add(pt);
       }
     }
-    readAloud(list);
+    
+    hiveService.addRecentProperty(list);
+    readService.readAloud(list);
     return list;
   }
 
@@ -41,27 +48,10 @@ class PropertyList extends StatelessWidget {
         ),
         for(var item in getListWithInRadius()) GestureDetector(
           onTap: () {
-            tts.stop();
+            readService.tts.stop();
             Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(property: item)));
           },
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-            padding: EdgeInsets.all(8.0),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Text(item['statusText']+'\n'+item['address']+'\n'+
-              'Distance: '+item['distance']+'    Angle: '+item['angle']+'\n'+
-              'Beds: ${item['beds']?.toInt() ?? 0},    Baths: ${item['baths']?.toInt() ?? 0}'+',    Area: ${item['area'] ?? 0} sqft\n'+
-              'Price'+ item['price'],
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 15.0,
-              ),
-            ),
-          ),
+          child: PropertyCard(item: item),
         ),
       ],
     );

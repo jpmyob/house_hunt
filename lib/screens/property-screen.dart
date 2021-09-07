@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:real_state_finder/screens/favourite-list-screen.dart';
-import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/services/hive-database-service.dart';
 import 'package:real_state_finder/widgets/favourite-button.dart';
 
 class PropertyScreen extends StatelessWidget {
@@ -9,6 +7,8 @@ class PropertyScreen extends StatelessWidget {
   final bool showFav;
   final bool showDelete;
   PropertyScreen({@required this.property, this.showFav, this.showDelete});
+
+  final hiveService = HiveDatabaseService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +24,7 @@ class PropertyScreen extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.delete), 
               onPressed: () {
-                fvBox = Hive.box('HH_favoriteList');
-                List fvList = fvBox.get('fv_list', defaultValue: []);
-                List list = fvList.where((el) => el['address'] != property['address']).toList();
-                fvBox.put('fv_list', list);
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteListScreen(favoriteList: list)));
+                hiveService.deletefavoriteProperty(property, context);
               }
             ),
           ),
