@@ -21,9 +21,9 @@ Position initialPos;
 Position currentPos;
 double coveredDistance = 0;
 
-double offset = 0.0155;
 double searchRadius = 1000;
 exploreLatLong(latitude, longitude) {
+  double offset = 0.0155;
   double latMax = latitude + offset;
   double latMin = latitude - offset;
   double lngMax = longitude + offset;

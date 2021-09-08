@@ -34,7 +34,7 @@ class HomeHuntScreen extends StatelessWidget {
       drawer: AppDrawer(),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: realStateService.getRealStateList(position: position),
+          future: realStateService.getZillowPropertyList(position: position),
           builder: (context, snapshot) {
             if(snapshot.hasData) {
               return LivePositionStream(position: position, propertyList: snapshot.data,);
