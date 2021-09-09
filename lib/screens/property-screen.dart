@@ -51,9 +51,16 @@ class PropertyScreen extends StatelessWidget {
               SizedBox(height: 10.0),
               Text('Distance: '+property['distance']+'    Angle: '+property['angle']+'\n'+
                 'Beds: ${property['beds']?.toInt() ?? 0},    Baths: ${property['baths']?.toInt() ?? 0}'+
-                ',    Area: ${property['area'] ?? 0} sqft\n',
+                ',    Area: ${property['area'] ?? 0} sqft',
                 style: TextStyle(
                   fontSize: 15.0,
+                ),
+              ),
+              Text('Lot Area: ${property['hdpData']['homeInfo']['lotAreaValue']?.toInt()} sqft    '+
+                'Tax: \$${property['hdpData']['homeInfo']['taxAssessedValue']?.toInt()}',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold
                 ),
               ),
               SizedBox(height: 10.0),

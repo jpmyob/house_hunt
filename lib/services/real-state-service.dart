@@ -3,15 +3,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:real_state_finder/utils/constants.dart';
 
-var minPrice = 0, maxPrice = 3000000, isAllHome = true, isManufactured = true, isLotLand = true,
-  isCondo = true, isApartmentOrCondo = true;
-
 class RealStateService {
   Future getZillowPropertyList({Position position}) async {
     try {
       var pos = exploreLatLong(position.latitude, position.longitude);
       var res = await http.get(Uri.parse(
-        '$ZILLOW_IP?searchQueryState={"pagination":{},"mapBounds":{"west":${pos["west"]},"east":${pos["east"]},"south":${pos["south"]},"north":${pos["north"]}},"isMapVisible":true,"filterState":{"price":{"min":0},"monthlyPayment":{"min":0}},"isListVisible":true}&wants={"cat1":["listResults","mapResults"],"cat2":["total"]}'
+        '$ZILLOW_IP?searchQueryState={"pagination":{},"mapBounds":{"west":${pos["west"]},"east":${pos["east"]},"south":${pos["south"]},"north":${pos["north"]}},"isMapVisible":true,"filterState":{$zillowFilter},"isListVisible":true}&wants={"cat1":["listResults","mapResults"],"cat2":["total"]}'
       ));
       allPropertyList = json.decode(res.body)['cat1']['searchResults']['listResults'] ?? [];
       return json.decode(res.body)['cat1']['searchResults']['listResults'];
@@ -21,10 +18,10 @@ class RealStateService {
     }
   }
 
-  zillowSearchFilter() {
-    String essentials = '"price":{"min":0,"max":3000000},"monthlyPayment":{"min":0}},"isAllHomes":{"value":true},'+
-      '"isManufactured":{"value":true},"isLotLand":{"value":true},"isCondo":{"value":true},"isApartmentOrCondo":{"value":true},';
-
+  searchFilterQuery() {
+    zillowFilter = '"price":{"min":$minPrice,"max":$maxPrice},"monthlyPayment":{"min":0},"isAllHomes":{"value":$isAllHome},'+
+    '"isManufactured":{"value":$isManufactured},"isLotLand":{"value":$isLotLand},"isCondo":{"value":$isCondo},"isApartmentOrCondo":{"value":$isApartmentOrCondo}';
+    print(zillowFilter);
   }
 
   // Future getRealtorList({Position position}) async {
