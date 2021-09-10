@@ -56,8 +56,9 @@ class PropertyScreen extends StatelessWidget {
                   fontSize: 15.0,
                 ),
               ),
-              Text('Lot Area: ${property['hdpData']['homeInfo']['lotAreaValue']?.toInt()} sqft    '+
-                'Tax: \$${property['hdpData']['homeInfo']['taxAssessedValue']?.toInt()}',
+              SizedBox(height: 5.0),
+              Text('Lot Area: ${property['hdpData']['homeInfo']['lotAreaValue']?.toInt()} sqft\n'+
+                'Tax Assesment: \$${property['hdpData']['homeInfo']['taxAssessedValue']?.toInt()}',
                 style: TextStyle(
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold

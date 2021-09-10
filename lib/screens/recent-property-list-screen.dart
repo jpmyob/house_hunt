@@ -27,7 +27,7 @@ class RecentListScreen extends StatelessWidget {
         backgroundColor: Colors.teal[400],
         titleSpacing: 0,
         title: Text(
-          'Recently Found Properties', 
+          'Recently Properties (Max 100)', 
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w700,
@@ -49,7 +49,7 @@ class RecentListScreen extends StatelessWidget {
               ),
             ),
             for(var item in updatePropertyList()) GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(property: item, showFav: false, showDelete: true,))),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyScreen(property: item, showFav: true, showDelete: false,))),
               child: PropertyCard(item: item),
             ),
           ],

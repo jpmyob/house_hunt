@@ -39,6 +39,9 @@ exploreLatLong(latitude, longitude) {
 }
 
 
+TextStyle propertyCalcLabel = TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold);
+TextStyle propertyCalcValue = TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold);
+
 InputDecoration inputDecoration = InputDecoration(
   contentPadding:EdgeInsets.only(left: 5.0),
   border: OutlineInputBorder(

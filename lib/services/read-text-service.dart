@@ -16,7 +16,7 @@ class ReadService {
     if(data.length > 0 && read && 
     Geolocator.distanceBetween(initialPos.latitude, initialPos.longitude, currentPos.latitude, currentPos.longitude) >= coveredDistance) {
       read = false;
-      double add = searchRadius > 500 ? searchRadius/2 : searchRadius;
+      double add = searchRadius > 500 ? (2*searchRadius)/3 : searchRadius;
       coveredDistance = coveredDistance + add;
       String text = '${data.length} real state property found!';
       for(var item in data) {

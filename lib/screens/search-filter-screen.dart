@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/widgets/number-text-field.dart';
 
 class SearchFilterScreen extends StatefulWidget {
 
@@ -60,20 +61,7 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Min Price (\$)', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Container(
-                    width: 100.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
-                      decoration: inputDecoration,
-                      style: TextStyle(color: Colors.black87),
-                      keyboardType: TextInputType.number,
-                      controller: minController,
-                    ),
-                  ),
+                  NumberTextField(controller: minController),
                 ],
               ),
             ),
@@ -83,20 +71,7 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Max Price', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Container(
-                    width: 100.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
-                      style: TextStyle(color: Colors.black87),
-                      decoration: inputDecoration,
-                      keyboardType: TextInputType.number,
-                      controller: maxController,
-                    ),
-                  ),
+                  NumberTextField(controller: maxController),
                 ],
               ),
             ),
