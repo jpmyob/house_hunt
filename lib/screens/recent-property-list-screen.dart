@@ -27,7 +27,7 @@ class RecentListScreen extends StatelessWidget {
         backgroundColor: Colors.teal[400],
         titleSpacing: 0,
         title: Text(
-          'Recently Properties (Max 100)', 
+          'Recently Properties', 
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w700,
@@ -41,7 +41,7 @@ class RecentListScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Text(
-                'Total Property Found ${recentList?.length}', 
+                '100 Recent Properties', 
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,

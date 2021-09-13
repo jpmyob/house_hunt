@@ -10,8 +10,10 @@ class RealStateService {
       var res = await http.get(Uri.parse(
         '$ZILLOW_IP?searchQueryState={"pagination":{},"mapBounds":{"west":${pos["west"]},"east":${pos["east"]},"south":${pos["south"]},"north":${pos["north"]}},"isMapVisible":true,"filterState":{$zillowFilter},"isListVisible":true}&wants={"cat1":["listResults","mapResults"],"cat2":["total"]}'
       ));
-      allPropertyList = json.decode(res.body)['cat1']['searchResults']['listResults'] ?? [];
-      return json.decode(res.body)['cat1']['searchResults']['listResults'];
+      List list = json.decode(res.body)['cat1']['searchResults']['listResults'] ?? [];
+      List relaxedList = json.decode(res.body)['cat1']['searchResults']['relaxedResults'];
+      allPropertyList = [...list, ...relaxedList];
+      return allPropertyList;
     } on FormatException catch(e) {
       print('Error: getRealStateList()\n$e');
       return [];
@@ -19,9 +21,13 @@ class RealStateService {
   }
 
   searchFilterQuery() {
-    zillowFilter = '"price":{"min":$minPrice,"max":$maxPrice},"monthlyPayment":{"min":0},"isAllHomes":{"value":$isAllHome},'+
-    '"isManufactured":{"value":$isManufactured},"isLotLand":{"value":$isLotLand},"isCondo":{"value":$isCondo},"isApartmentOrCondo":{"value":$isApartmentOrCondo}';
-    print(zillowFilter);
+    if(forSale) {
+      zillowFilter = '"price":{"min":$minPrice,"max":$maxPrice},"monthlyPayment":{"min":0},"isAllHomes":{"value":$isAllHomes},"isApartment":{"value":$isApartment},'+
+      '"isTownhouse":{"value":$isTownhouse},"isComingSoon":{"value":$isAllHomes},"isNewConstruction":{"value":$isAllHomes},"isManufactured":{"value":$isManufactured},'+
+      '"isLotLand":{"value":$isLotLand},"isCondo":{"value":$isCondo},"isApartmentOrCondo":{"value":${isApartment && isCondo}}';
+    } else {
+      zillowFilter = '"isForSaleByAgent":{"value":false},"isForSaleByOwner":{"value":false},"isNewConstruction":{"value":false},"isForSaleForeclosure":{"value":false},"isComingSoon":{"value":false},"isAuction":{"value":false},"isForRent":{"value":true},"isAllHomes":{"value":true},"isCondo":{"value":false},"isTownhouse":{"value":false},"isApartment":{"value":false},"isApartmentOrCondo":{"value":false}';
+    }
   }
 
   // Future getRealtorList({Position position}) async {

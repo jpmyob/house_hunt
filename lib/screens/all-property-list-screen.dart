@@ -39,7 +39,7 @@ class AllPropertyListScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Text(
-                'Nearby Property found ${allPropertyList?.length}', 
+                'Total Property found ${allPropertyList?.length}', 
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,

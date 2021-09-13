@@ -3,8 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/utils/constants.dart';
 
 class ReadService {
-  final FlutterTts tts = new FlutterTts();
-  bool read = true; 
+  final FlutterTts tts = new FlutterTts(); 
 
   initFlutterTTS() async {
     tts.setLanguage("en");

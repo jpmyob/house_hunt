@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
 import 'package:real_state_finder/widgets/number-text-field.dart';
+import 'package:real_state_finder/widgets/select.dart';
 
 class SearchFilterScreen extends StatefulWidget {
 
@@ -37,7 +38,6 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              // ignore: deprecated_member_use
               if(double.parse(minController.text) >= 0) {
                 minPrice = double.parse(minController.text)?.toInt() ?? 0;
               }
@@ -60,6 +60,26 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text('Search Type', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                  SelectButton(
+                    options: [{'name':'For Sale', 'value': '4sale'}, {'name':'For Rent', 'value': '4rent'}], 
+                    dropdownValue: forSale ? '4sale' : '4rent', 
+                    onSelect: (value) {
+                      if(value == '4sale') forSale = true;
+                      else forSale = false;
+
+                      realStateService.searchFilterQuery();
+                      reStartApp(context);
+                    }
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text('Min Price (\$)', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
                   NumberTextField(controller: minController),
                 ],
@@ -75,67 +95,87 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Visibility(
+              visible: forSale,
+              child: Wrap(
                 children: [
-                  Text('All Homes', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Switch.adaptive(
-                    value: isAllHome, 
-                    onChanged: (value) => setState(() => isAllHome = value),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Houses', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isAllHomes, 
+                          onChanged: (value) => setState(() => isAllHomes = value),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Manufactured', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Switch.adaptive(
-                    value: isManufactured, 
-                    onChanged: (value) => setState(() => isManufactured = value),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Apartment', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isApartment, 
+                          onChanged: (value) => setState(() => isApartment = value),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Lot/Land', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Switch.adaptive(
-                    value: isLotLand, 
-                    onChanged: (value) => setState(() => isLotLand = value),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Condominium', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isCondo, 
+                          onChanged: (value) => setState(() => isCondo = value),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Condominium', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Switch.adaptive(
-                    value: isCondo, 
-                    onChanged: (value) => setState(() => isCondo = value),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Town House', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isTownhouse, 
+                          onChanged: (value) => setState(() => isTownhouse = value),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Apartment/Condo', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Switch.adaptive(
-                    value: isApartmentOrCondo, 
-                    onChanged: (value) => setState(() => isApartmentOrCondo = value),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Manufactured', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isManufactured, 
+                          onChanged: (value) => setState(() => isManufactured = value),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Lot/Land', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        Switch.adaptive(
+                          value: isLotLand, 
+                          onChanged: (value) => setState(() => isLotLand = value),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

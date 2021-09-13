@@ -31,7 +31,7 @@ class _EditSearchRadiusScreenState extends State<EditSearchRadiusScreen> {
           Slider(
             value: sliderValue, 
             min: 300,
-            max: 2500,
+            max: 2000,
             onChanged: (value) {
               setState(() {
                 sliderValue = value.roundToDouble();

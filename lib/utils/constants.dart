@@ -1,26 +1,30 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/screens/loading-screen.dart';
 import 'package:real_state_finder/services/read-text-service.dart';
 const ZILLOW_IP = 'https://www.zillow.com/search/GetSearchPageState.htm';
 
-var minPrice = 0, maxPrice = 3000000, isAllHome = true, isManufactured = true, isLotLand = true,
-  isCondo = true, isApartmentOrCondo = true;
-String zillowFilter = '"price":{"min":$minPrice,"max":$maxPrice},"monthlyPayment":{"min":0},"isAllHomes":{"value":$isAllHome},'+
-    '"isManufactured":{"value":$isManufactured},"isLotLand":{"value":$isLotLand},"isCondo":{"value":$isCondo},"isApartmentOrCondo":{"value":$isApartmentOrCondo}';
+var minPrice = 0, maxPrice = 3000000, isAllHomes = true, isLotLand = true, isCondo = true,
+isTownhouse = true, isApartment = true, isManufactured = true, forSale = true;
+
+String zillowFilter = '"price":{"min":$minPrice,"max":$maxPrice},"monthlyPayment":{"min":0},"isAllHomes":{"value":$isAllHomes},"isApartment":{"value":$isApartment},'+
+  '"isTownhouse":{"value":$isTownhouse},"isComingSoon":{"value":$isAllHomes},"isNewConstruction":{"value":$isAllHomes},"isManufactured":{"value":$isManufactured},'+
+  '"isLotLand":{"value":$isLotLand},"isCondo":{"value":$isCondo},"isApartmentOrCondo":{"value":${isApartment && isCondo}}';
 
 var fvBox;
 var recentBox;
 List allPropertyList = [];
+bool read = true;
 
 reStartApp(context) {
+  coveredDistance = 0;
+  allPropertyList = [];
   ReadService().tts.stop();
+  Navigator.popUntil(context, (route) => route.isFirst);
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    Navigator.popUntil(context, (route) => route.isFirst);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoadingScreen()));
-    allPropertyList = [];
-    ReadService().read = true;
-    coveredDistance = 0;
+    Timer(Duration(seconds: 3), () => read = true);
   });
 }
 
@@ -37,7 +41,6 @@ exploreLatLong(latitude, longitude) {
   double lngMin = longitude - offset;
   return {'west': lngMin, 'east': lngMax, 'south': latMin, 'north': latMax};
 }
-
 
 TextStyle propertyCalcLabel = TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold);
 TextStyle propertyCalcValue = TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold);

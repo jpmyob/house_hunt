@@ -38,12 +38,20 @@ class PropertyList extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-          child: Text(
-            'Nearby Property found ${getListWithInRadius()?.length}', 
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Property found ${getListWithInRadius()?.length}', 
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                forSale ? ' (For Sale)' : ' (For Rent)',
+              )
+            ],
           ),
         ),
         for(var item in getListWithInRadius()) GestureDetector(
