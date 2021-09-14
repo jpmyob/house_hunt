@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:real_state_finder/screens/property-calculation-screen.dart';
 import 'package:real_state_finder/services/hive-database-service.dart';
+import 'package:real_state_finder/utils/constants.dart';
 import 'package:real_state_finder/widgets/favourite-button.dart';
 
 class PropertyScreen extends StatelessWidget {
@@ -71,6 +73,20 @@ class PropertyScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Visibility(
+                visible: forSale,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: ElevatedButton(
+                    child: Text('Detail Calculation', style: propertyCalcLabel,),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyCalcScreen(price: double.parse(property['unformattedPrice'].toString()), 
+                        taxAssesment: double.parse((property['hdpData']['homeInfo']['taxAssessedValue'] ?? double.parse(property['unformattedPrice'].toString())*0.6).toString()),),)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.teal,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),

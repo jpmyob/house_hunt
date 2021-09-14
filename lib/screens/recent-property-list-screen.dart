@@ -41,7 +41,7 @@ class RecentListScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Text(
-                '100 Recent Properties', 
+                'Last 100 Properties (${recentList.length})', 
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,

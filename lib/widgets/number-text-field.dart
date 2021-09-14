@@ -10,7 +10,7 @@ class NumberTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width ?? 100.0,
-      height: 30.0,
+      height: 25.0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
