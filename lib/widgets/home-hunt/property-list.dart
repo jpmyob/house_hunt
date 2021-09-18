@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/screens/property-screen.dart';
-import 'package:real_state_finder/services/hive-database-service.dart';
 import 'package:real_state_finder/services/read-text-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
 import 'package:real_state_finder/widgets/property-card.dart';
@@ -12,7 +11,6 @@ class PropertyList extends StatelessWidget {
   final List propertyList;
   PropertyList({@required this.position, @required this.propertyList}); 
 
-  final hiveService = HiveDatabaseService();
   final readService = ReadService();
   getListWithInRadius() {
     List list = [];
@@ -26,7 +24,6 @@ class PropertyList extends StatelessWidget {
       }
     }
     
-    hiveService.addRecentProperty(list);
     readService.readAloud(list);
     return list;
   }

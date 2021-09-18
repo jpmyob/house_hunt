@@ -15,7 +15,7 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
   final downController = TextEditingController();
   final interestController = TextEditingController();
   final taxController = TextEditingController();
-  // final unitController = TextEditingController();
+  final mPeriodController = TextEditingController();
   final rentController = TextEditingController();
   final otherIncomeController = TextEditingController();
   final insuranceController = TextEditingController();
@@ -35,7 +35,7 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
     downController.text = '25';
     interestController.text = '3.3';
     taxController.text = '2.5';
-    // unitController.text = '1';
+    mPeriodController.text = '30';
     rentController.text = '${widget.taxAssesment * 0.9 / 100}';
     otherIncomeController.text = '0';
     insuranceController.text = '100';
@@ -52,23 +52,38 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
   }
 
   calculate() {
-    annualTax = widget.price * double.parse(taxController.text) / 100;
-    downPayment = widget.price * double.parse(downController.text) / 100;
-    tIncome = double.parse(rentController.text) + double.parse(otherIncomeController.text);
-    mortgage = Finance.pmt(rate: double.parse(interestController.text)/1200, nper: 30*12, pv: widget.price - downPayment) *-1;
-    allPiti = mortgage + (annualTax /12) + double.parse(insuranceController.text) + double.parse(pmiController.text);
-    repair = allPiti * double.parse(repairController.text) / 100;
-    vacancy = allPiti * double.parse(vacancyController.text) / 100;
-    capital = allPiti * double.parse(capitalController.text) / 100;
-    tExpense = allPiti + double.parse(utilityController.text) + repair + vacancy + capital + double.parse(rnlcController.text); 
-    cashFlow = tIncome - tExpense;
-    prepay = (annualTax/12 + double.parse(insuranceController.text)) * 12;
-    escrow = (annualTax/12 + double.parse(insuranceController.text)) * 6;
-    closing = 1500;
-    inBuyDown = 1200;
-    c2c = closing + inBuyDown + prepay + escrow + downPayment;
-    tInvestment = c2c + double.parse(rehabController.text);
-    roi = (cashFlow*12) / tInvestment;
+    try {
+      annualTax = widget.price * double.parse(taxController.text) / 100;
+      downPayment = widget.price * double.parse(downController.text) / 100;
+      tIncome = double.parse(rentController.text) + double.parse(otherIncomeController.text);
+      mortgage = Finance.pmt(rate: double.parse(interestController.text)/1200, 
+      nper: 30*double.parse(mPeriodController.text), 
+      pv: widget.price - downPayment) *-1;
+      allPiti = mortgage + (annualTax /12) + double.parse(insuranceController.text) + double.parse(pmiController.text);
+      repair = allPiti * double.parse(repairController.text) / 100;
+      vacancy = allPiti * double.parse(vacancyController.text) / 100;
+      capital = allPiti * double.parse(capitalController.text) / 100;
+      tExpense = allPiti + double.parse(utilityController.text) + repair + vacancy + capital + double.parse(rnlcController.text); 
+      cashFlow = tIncome - tExpense;
+      prepay = (annualTax/12 + double.parse(insuranceController.text)) * 12;
+      escrow = (annualTax/12 + double.parse(insuranceController.text)) * 6;
+      closing = 1500;
+      inBuyDown = 1200;
+      c2c = closing + inBuyDown + prepay + escrow + downPayment;
+      tInvestment = c2c + double.parse(rehabController.text);
+      roi = (cashFlow*12) / tInvestment;
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error!'),
+            contentPadding: EdgeInsets.only(top: 20.0, bottom: 30.0, left: 20.0, right: 20.0),
+            content: Text('Please Input number ONLY to get the correct value.'),
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -76,11 +91,12 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal[400],
+        leadingWidth: 40.0,
         titleSpacing: 0,
         title: Text(
           'Detail Calculation', 
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: 16.0,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -139,14 +155,14 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
                   Text('${annualTax?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
-              // SizedBox(height: 10.0),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('Number of Unit', style: propertyCalcLabel,),
-              //     NumberTextField(controller: taxController, width: 50.0,),
-              //   ],
-              // ),
+              SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Mortgage Period (Years)', style: propertyCalcLabel,),
+                  NumberTextField(controller: mPeriodController, width: 50.0,),
+                ],
+              ),
               
               SizedBox(height: 25.0),
               Text('Income (monthly)', style: propertyCalcValue,),
@@ -319,8 +335,8 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Closing', style: propertyCalcLabel,),
-                  Text('\$${closing?.toInt()}', style: propertyCalcValue,),
+                  Text('Closing (\$)', style: propertyCalcLabel,),
+                  Text('${closing?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -328,7 +344,7 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Pre Pay(12 moT & I)', style: propertyCalcLabel,),
-                  Text('\$${prepay?.toInt()}', style: propertyCalcValue,),
+                  Text('${prepay?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),
@@ -336,30 +352,30 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Escrow(6mo T & I)', style: propertyCalcLabel,),
-                  Text('\$${escrow?.toInt()}', style: propertyCalcValue,),
+                  Text('${escrow?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Interest Buy Down', style: propertyCalcLabel,),
-                  Text('\$${inBuyDown?.toInt()}', style: propertyCalcValue,),
+                  Text('Interest Buy Down (\$)', style: propertyCalcLabel,),
+                  Text('${inBuyDown?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Cash To Close', style: propertyCalcLabel,),
-                  Text('\$${c2c?.toInt()}', style: propertyCalcValue,),
+                  Text('Cash To Close (\$)', style: propertyCalcLabel,),
+                  Text('${c2c?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Rehab', style: propertyCalcLabel,),
+                  Text('Rehab (\$)', style: propertyCalcLabel,),
                   NumberTextField(controller: rehabController, width: 50.0,),
                 ],
               ),
@@ -367,8 +383,8 @@ class _PropertyCalcScreenState extends State<PropertyCalcScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total Investment', style: propertyCalcLabel,),
-                  Text('\$${tInvestment?.toInt()}', style: propertyCalcValue,),
+                  Text('Total Investment (\$)', style: propertyCalcLabel,),
+                  Text('${tInvestment?.toInt()}', style: propertyCalcValue,),
                 ],
               ),
               SizedBox(height: 10.0),

@@ -16,6 +16,7 @@ var fvBox;
 var recentBox;
 List allPropertyList = [];
 bool read = true;
+bool enableVoice = true;
 
 reStartApp(context) {
   coveredDistance = 0;

@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:real_state_finder/screens/search-filter-screen.dart';
 import 'package:real_state_finder/services/real-state-service.dart';
 import 'package:real_state_finder/utils/constants.dart';
+import 'package:real_state_finder/widgets/home-hunt/disable-voice-button.dart';
 import 'package:real_state_finder/widgets/home-hunt/drawer.dart';
 import 'package:real_state_finder/widgets/home-hunt/live-position-stream.dart';
 
@@ -26,6 +27,7 @@ class HomeHuntScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          DisableVoiceButton(),
           IconButton(
             icon: Icon(Icons.filter_list_alt, color: Colors.white,), 
             onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchFilterScreen())),
